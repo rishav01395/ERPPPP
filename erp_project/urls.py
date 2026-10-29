@@ -17,18 +17,15 @@ urlpatterns = [
     # Default Django Admin
     path('admin/', admin.site.urls),
     
-    # Specific Management & Feature Routes
+    # Specific Management & Feature Routes (Direct Views)
     path('dashboard/admin/notices/', manage_notices, name='manage_notices'),
     path('dashboard/admin/fees/', manage_fees, name='manage_fees'),
     path('dashboard/admin/academics/', manage_academics, name='manage_academics'),
-    path('dashboard/attendance/', include('attendance.urls')),
     path('dashboard/homework/', temp_homework_view, name='manage_homework'),
     
-    # App URLs (Sirf ek baar include honge)
+    # App URLs (Sirf wahi jo actually files hain aur zaroori hain)
     path('', include('accounts.urls')),
     path('', include('academics.urls')),
-    path('', include('attendance.urls')),
-    path('', include('fees.urls')),
+    path('', include('attendance.urls')), # Duplicate hata diya hai
     path('', include('notices.urls')),
-    path('', include('homework.urls')),
 ]
