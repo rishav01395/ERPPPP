@@ -129,3 +129,5 @@ LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Force allow all hosts for Vercel (Sabse niche likhna hai)
+ALLOWED_HOSTS = ['*']
