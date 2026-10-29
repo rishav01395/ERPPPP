@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Homework | College ERP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col hidden md:flex shadow-xl">
+            <div class="h-16 flex items-center px-6 bg-slate-950 text-white font-bold text-lg tracking-wider">
+                <i class="fa-solid fa-graduation-cap text-blue-500 mr-2 text-xl"></i> ITS College ERP
+            </div>
+            
+            <nav class="flex-1 px-4 py-6 space-y-2 text-sm font-medium">
+                <a href="{% url 'login' %}" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition">
+                    <i class="fa-solid fa-chart-pie w-5 mr-3"></i> Dashboard
+                </a>
+                <a href="{% url 'teacher_attendance' %}" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition">
+                    <i class="fa-solid fa-user-check w-5 mr-3 text-emerald-400"></i> Attendance
+                </a>
+                <a href="{% url 'manage_homework' %}" class="flex items-center px-4 py-3 rounded-xl bg-blue-600 text-white shadow-md transition">
+                    <i class="fa-solid fa-book-open w-5 mr-3 text-amber-400"></i> Homework
+                </a>
+                <a href="{% url 'manage_notices' %}" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition">
+                    <i class="fa-solid fa-bullhorn w-5 mr-3 text-purple-400"></i> Notices
+                </a>
+            </nav>
+
+            <div class="p-4 bg-slate-950">
+                <a href="{% url 'logout' %}" class="flex items-center px-4 py-2 rounded-lg text-red-400 hover:bg-red-500/10 transition text-sm font-medium">
+                    <i class="fa-solid fa-right-from-bracket w-5 mr-3"></i> Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-y-auto">
+            
+            <!-- Header -->
+            <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shadow-sm">
+                <h1 class="text-xl font-bold text-slate-800">Homework Manager</h1>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm font-semibold text-gray-600">{{ request.user.username }}</span>
+                </div>
+            </header>
+
+            <!-- Page Body -->
+            <main class="p-8">
+                
+                <!-- Assign Homework Form -->
+                <form method="POST" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+                    {% csrf_token %}
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Assign New Homework</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                            <input type="text" name="title" class="w-full rounded-xl border-gray-200 shadow-sm p-3 border focus:outline-none focus:border-blue-500" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                            <select name="subject" class="w-full rounded-xl border-gray-200 shadow-sm p-3 border focus:outline-none focus:border-blue-500" required>
+                                <option value="">-- Choose Subject --</option>
+                                {% for sub in assigned_subjects %}
+                                    <option value="{{ sub.id }}">{{ sub.name }} (Sem {{ sub.semester.name }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea name="description" rows="3" class="w-full rounded-xl border-gray-200 shadow-sm p-3 border focus:outline-none focus:border-blue-500" required></textarea>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
+                        <input type="date" name="due_date" class="w-full md:w-1/2 rounded-xl border-gray-200 shadow-sm p-3 border focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-xl shadow-lg shadow-blue-600/20 hover:bg-blue-700 font-semibold transition">
+                        Publish Homework
+                    </button>
+                </form>
+
+                <!-- Assigned Homework History -->
+                <h3 class="text-lg font-bold text-slate-800 mb-4">Assigned Homework History</h3>
+                <div class="space-y-4">
+                    {% for hw in homeworks %}
+                    <div class="border border-gray-100 p-5 rounded-2xl bg-white shadow-sm flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold text-lg text-slate-800">{{ hw.title }}</h4>
+                            <p class="text-sm text-gray-500 mt-1">Subject: <span class="font-semibold text-blue-600">{{ hw.subject.name }}</span></p>
+                            <p class="mt-2 text-gray-700 text-sm">{{ hw.description }}</p>
+                        </div>
+                        <span class="text-xs bg-red-50 text-red-600 font-semibold px-3 py-1.5 rounded-full border border-red-100">
+                            Due: {{ hw.due_date|date:"M d, Y" }}
+                        </span>
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-500 italic">No homework assigned yet.</p>
+                    {% endfor %}
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+</body>
+</html>

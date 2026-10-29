@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Dashboard | College ERP</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js CDN for Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 font-sans antialiased">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col hidden md:flex shadow-xl">
+            <div class="h-16 flex items-center px-6 bg-slate-950 text-white font-bold text-lg tracking-wider">
+                <i class="fa-solid fa-graduation-cap text-blue-500 mr-2 text-xl"></i> ITS College ERP
+            </div>
+            
+            <nav class="flex-1 px-4 py-6 space-y-2 text-sm font-medium">
+                <a href="#" class="flex items-center px-4 py-3 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/30 transition">
+                    <i class="fa-solid fa-chart-pie w-5 mr-3"></i> Dashboard
+                </a>
+                <a href="{% url 'teacher_attendance' %}" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition">
+                    <i class="fa-solid fa-user-check w-5 mr-3 text-emerald-400"></i> Attendance
+                </a>
+                <a href="{% url 'manage_homework' %}" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition">
+                    <i class="fa-solid fa-book-open w-5 mr-3 text-amber-400"></i> Homework
+                </a>
+                <a href="{% url 'manage_notices' %}" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition">
+                    <i class="fa-solid fa-bullhorn w-5 mr-3 text-purple-400"></i> Notices
+                </a>
+                <a href="{% url 'teacher_marks' %}" class="flex items-center px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white transition">
+                    <i class="fa-solid fa-award w-5 mr-3 text-cyan-300"></i> Internal Marks
+                </a>
+            </nav>
+
+            <div class="p-4 bg-slate-950">
+                <a href="{% url 'logout' %}" class="flex items-center px-4 py-2 rounded-lg text-red-400 hover:bg-red-500/10 transition text-sm font-medium">
+                    <i class="fa-solid fa-right-from-bracket w-5 mr-3"></i> Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="flex-1 flex flex-col overflow-y-auto">
+            
+            <!-- Top Navbar -->
+            <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8 shadow-sm">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-slate-800">Teacher Dashboard</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm font-semibold text-gray-600">Welcome, {{ request.user.username }}</span>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center font-bold justify-center shadow-md">
+                        {{ request.user.username|slice:":1"|upper }}
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Body / Content Area -->
+            <main class="p-8">
+                
+                <!-- Welcome Banner with Gradient -->
+                <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-8 text-white shadow-xl mb-8 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-extrabold mb-2">Academic Excellence Awaits ✨</h2>
+                        <p class="text-blue-100 text-sm">Manage your daily classes, track student attendance, and broadcast notices seamlessly.</p>
+                    </div>
+                    <div class="hidden md:block text-right">
+                        <span class="bg-white/10 px-4 py-2 rounded-xl text-sm font-semibold backdrop-blur-md">Portal Active</span>
+                    </div>
+                </div>
+
+                <!-- Colorful Stats Grid Row -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <!-- Stat 1 -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Assigned Subjects</p>
+                            <h3 class="text-2xl font-extrabold text-slate-800 mt-1">4</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl font-bold shadow-inner">
+                            <i class="fa-solid fa-book"></i>
+                        </div>
+                    </div>
+                    <!-- Stat 2 -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Total Students</p>
+                            <h3 class="text-2xl font-extrabold text-slate-800 mt-1">120</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl font-bold shadow-inner">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                    </div>
+                    <!-- Stat 3 -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Pending Homework</p>
+                            <h3 class="text-2xl font-extrabold text-slate-800 mt-1">2</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-xl font-bold shadow-inner">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                        </div>
+                    </div>
+                    <!-- Stat 4 -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition">
+                        <div>
+                            <p class="text-xs font-bold uppercase tracking-wider text-gray-400">Attendance Rate</p>
+                            <h3 class="text-2xl font-extrabold text-slate-800 mt-1">94%</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center text-xl font-bold shadow-inner">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Bar Graph & Quick Actions -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                    
+                    <!-- Bar Graph Card -->
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 lg:col-span-2">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-bold text-slate-800">Weekly Attendance Overview</h3>
+                            <span class="text-xs bg-emerald-50 text-emerald-600 font-bold px-3 py-1 rounded-full">Live Stats</span>
+                        </div>
+                        <!-- Canvas for Bar Chart -->
+                        <div class="h-64">
+                            <canvas id="attendanceBarChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Card -->
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-4">Quick Shortcuts</h3>
+                            <div class="space-y-3">
+                                <a href="{% url 'teacher_attendance' %}" class="flex items-center p-3 rounded-2xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-semibold transition">
+                                    <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center mr-3 shadow">
+                                        <i class="fa-solid fa-user-check"></i>
+                                    ></div>
+                                    Take Attendance
+                                </a>
+                                <a href="{% url 'manage_homework' %}" class="flex items-center p-3 rounded-2xl bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold transition">
+                                    <div class="w-10 h-10 rounded-xl bg-blue-500 text-white flex items-center justify-center mr-3 shadow">
+                                        <i class="fa-solid fa-book-open"></i>
+                                    </div>
+                                    Manage Homework
+                                </a>
+                                <a href="{% url 'manage_notices' %}" class="flex items-center p-3 rounded-2xl bg-purple-50 text-purple-700 hover:bg-purple-100 font-semibold transition">
+                                    <div class="w-10 h-10 rounded-xl bg-purple-500 text-white flex items-center justify-center mr-3 shadow">
+                                        <i class="fa-solid fa-bullhorn"></i>
+                                    </div>
+                                    Broadcast Notices
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-gray-100 text-center">
+                            <p class="text-xs text-gray-400">ITS College ERP Portal v2.6</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Chart.js Script to Render Bar Graph -->
+    <script>
+        const ctx = document.getElementById('attendanceBarChart').getContext('2d');
+        const attendanceBarChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                datasets: [{
+                    label: 'Students Present',
+                    data: [110, 115, 108, 118, 112, 95],
+                    backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                    borderColor: 'rgb(37, 99, 235)',
+                    borderWidth: 1,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [4, 4] }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

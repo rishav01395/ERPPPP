@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Academics | College ERP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus {
+            -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans antialiased">
+    <div class="container mx-auto px-6 py-8 max-w-7xl">
+        
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <div>
+                <h1 class="text-2xl font-extrabold text-slate-800"><i class="fa-solid fa-graduation-cap text-emerald-500 mr-2"></i> Academic Structure Management</h1>
+                <p class="text-sm text-gray-500">Configure courses, branches, semesters, subjects, and teacher allotments.</p>
+            </div>
+            <a href="{% url 'admin_dashboard' %}" class="bg-slate-800 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-slate-700 transition shadow-sm">Back to Dashboard</a>
+        </div>
+
+        <!-- Messages Display -->
+        {% if messages %}
+        <div class="mb-6 space-y-2">
+            {% for message in messages %}
+            <div class="p-4 rounded-xl text-sm font-semibold {% if message.tags == 'error' %}bg-red-50 text-red-600 border border-red-100{% else %}bg-emerald-50 text-emerald-600 border border-emerald-100{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- GRID FORMS SECTION -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            
+            <!-- 1. Add Course -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h2 class="text-md font-bold text-slate-800 mb-4"><i class="fa-solid fa-book text-emerald-500 mr-2"></i> Add Course</h2>
+                <form method="POST" class="space-y-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="add_course" value="1">
+                    <div>
+                        {{ course_form.as_p }}
+                    </div>
+                    <button type="submit" class="w-full bg-emerald-600 text-white py-2 rounded-xl text-sm font-semibold hover:bg-emerald-700 transition">Save Course</button>
+                </form>
+            </div>
+
+            <!-- 2. Add Branch -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h2 class="text-md font-bold text-slate-800 mb-4"><i class="fa-solid fa-code-branch text-blue-500 mr-2"></i> Add Branch</h2>
+                <form method="POST" class="space-y-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="add_branch" value="1">
+                    <div>
+                        {{ branch_form.as_p }}
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-xl text-sm font-semibold hover:bg-blue-700 transition">Save Branch</button>
+                </form>
+            </div>
+
+            <!-- 3. Add Semester -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h2 class="text-md font-bold text-slate-800 mb-4"><i class="fa-solid fa-layer-group text-purple-500 mr-2"></i> Add Semester</h2>
+                <form method="POST" class="space-y-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="add_semester" value="1">
+                    <div>
+                        {{ semester_form.as_p }}
+                    </div>
+                    <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded-xl text-sm font-semibold hover:bg-purple-700 transition">Save Semester</button>
+                </form>
+            </div>
+
+            <!-- 4. Add Subject -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h2 class="text-md font-bold text-slate-800 mb-4"><i class="fa-solid fa-book-bookmark text-amber-500 mr-2"></i> Add Subject</h2>
+                <form method="POST" class="space-y-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="add_subject" value="1">
+                    <div>
+                        {{ subject_form.as_p }}
+                    </div>
+                    <button type="submit" class="w-full bg-amber-600 text-white py-2 rounded-xl text-sm font-semibold hover:bg-amber-700 transition">Save Subject</button>
+                </form>
+            </div>
+
+            <!-- 5. Teacher Subject Allotment -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 md:col-span-2 lg:col-span-2">
+                <h2 class="text-md font-bold text-slate-800 mb-4"><i class="fa-solid fa-chalkboard-user text-indigo-500 mr-2"></i> Allot Teacher to Subject</h2>
+                <form method="POST" class="space-y-4">
+                    {% csrf_token %}
+                    <input type="hidden" name="add_allotment" value="1">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {{ allotment_form.as_p }}
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">Allot Teacher</button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- LISTS / TABLES SECTION -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Courses & Branches List -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-lg font-bold text-slate-800 mb-4">Existing Courses & Branches</h3>
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="text-xs font-bold uppercase text-gray-400 mb-2">Courses</h4>
+                        <div class="flex flex-wrap gap-2">
+                            {% for c in courses %}
+                            <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-sm font-medium">{{ c.name }}</span>
+                            {% empty %}
+                            <span class="text-xs text-gray-400">No courses added yet.</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold uppercase text-gray-400 mb-2">Branches</h4>
+                        <div class="flex flex-wrap gap-2">
+                            {% for b in branches %}
+                            <span class="bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-sm font-medium">{{ b.name }}</span>
+                            {% empty %}
+                            <span class="text-xs text-gray-400">No branches added yet.</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teacher Allotments List -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-lg font-bold text-slate-800 mb-4">Teacher Subject Allotments</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-600">
+                        <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-700">
+                            <tr>
+                                <th class="p-3 rounded-l-xl">Teacher</th>
+                                <th class="p-3 rounded-r-xl">Subject</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for a in allotments %}
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-3 font-semibold text-slate-800">{{ a.teacher.get_full_name|default:a.teacher.username }}</td>
+                                <td class="p-3">{{ a.subject.name }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-center text-gray-400 py-4">No teacher allotments found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>

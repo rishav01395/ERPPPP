@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Structure - ITS College ERP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">ITS College ERP | Academic Setup</a>
+            <div class="d-flex">
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-light btn-sm me-2">Dashboard</a>
+                <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row">
+            <!-- Forms Column -->
+            <div class="col-md-4 mb-4">
+                <!-- Add Course -->
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-header bg-primary text-white fw-bold">Add Course</div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ course_form.as_p }}
+                            <button type="submit" name="add_course" class="btn btn-success w-100 btn-sm fw-bold">Save Course</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Add Branch -->
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-header bg-secondary text-white fw-bold">Add Branch</div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ branch_form.as_p }}
+                            <button type="submit" name="add_branch" class="btn btn-success w-100 btn-sm fw-bold">Save Branch</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Add Semester -->
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-header bg-dark text-white fw-bold">Add Semester</div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ semester_form.as_p }}
+                            <button type="submit" name="add_semester" class="btn btn-success w-100 btn-sm fw-bold">Save Semester</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Add Subject -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-info text-dark fw-bold">Add Subject</div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ subject_form.as_p }}
+                            <button type="submit" name="add_subject" class="btn btn-success w-100 btn-sm fw-bold">Save Subject</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tables Column -->
+            <div class="col-md-8">
+                <!-- Courses Table -->
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-header bg-light fw-bold">Courses ({{ courses.count }})</div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead><tr><th>Name</th><th>Code</th><th>Description</th></tr></thead>
+                            <tbody>
+                                {% for c in courses %}
+                                <tr><td>{{ c.name }}</td><td>{{ c.code }}</td><td>{{ c.description }}</td></tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="text-center text-muted">No courses added yet.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Branches Table -->
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-header bg-light fw-bold">Branches ({{ branches.count }})</div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead><tr><th>Course</th><th>Branch Name</th><th>Code</th></tr></thead>
+                            <tbody>
+                                {% for b in branches %}
+                                <tr><td>{{ b.course.name }}</td><td>{{ b.name }}</td><td>{{ b.code }}</td></tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="text-center text-muted">No branches added yet.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Semesters Table -->
+                <div class="card shadow-sm border-0 mb-3">
+                    <div class="card-header bg-light fw-bold">Semesters ({{ semesters.count }})</div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead><tr><th>Course & Branch</th><th>Semester</th></tr></thead>
+                            <tbody>
+                                {% for s in semesters %}
+                                <tr><td>{{ s.branch.course.name }} - {{ s.branch.name }}</td><td>{{ s.name }}</td></tr>
+                                {% empty %}
+                                <tr><td colspan="2" class="text-center text-muted">No semesters added yet.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Subjects Table -->
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-light fw-bold">Subjects ({{ subjects.count }})</div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead><tr><th>Semester</th><th>Subject Name</th><th>Code</th></tr></thead>
+                            <tbody>
+                                {% for sub in subjects %}
+                                <tr><td>{{ sub.semester }}</td><td>{{ sub.name }}</td><td>{{ sub.code }}</td></tr>
+                                {% empty %}
+                                <tr><td colspan="3" class="text-center text-muted">No subjects added yet.</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Teacher Allotment -->
+<div class="card shadow-sm border-0 mb-3">
+    <div class="card-header bg-warning text-dark fw-bold">Assign Subject to Teacher</div>
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            {{ allotment_form.as_p }}
+            <button type="submit" name="add_allotment" class="btn btn-success w-100 btn-sm fw-bold">Assign Subject</button>
+        </form>
+    </div>
+</div>
+
+<!-- Allotments Table -->
+<div class="card shadow-sm border-0 mb-3">
+    <div class="card-header bg-light fw-bold">Teacher-Subject Allotments ({{ allotments.count }})</div>
+    <div class="card-body table-responsive">
+        <table class="table table-sm table-striped">
+            <thead>
+                <tr>
+                    <th>Teacher</th>
+                    <th>Subject</th>
+                    <th>Branch</th>
+                    <th>Semester</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for a in allotments %}
+                <tr>
+                    <td>{{ a.teacher.username }}</td>
+                    <td>{{ a.subject.name }}</td>
+                    <td>{{ a.subject.semester.branch.name }}</td>
+                    <td>{{ a.subject.semester.name }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="text-center text-muted">No allotments made yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
