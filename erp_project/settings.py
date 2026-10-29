@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(
     DEBUG=(bool, True),
     SECRET_KEY=(str, 'django-insecure-its-college-erp-local-dev-key'),
-    ALLOWED_HOSTS=(list, ['*']),
+    ALLOWED_HOSTS= ['*'],
     DATABASE_URL=(str, '')
 )
 
