@@ -18,6 +18,12 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 ALLOWED_HOSTS = ['*']
 
+# CSRF Trusted Origins for Vercel deployment
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.vercel.app',
+    'https://erpppp-two.vercel.app',
+]
+
 # Installed Applications
 INSTALLED_APPS = [
     # Built-in Django Apps
@@ -123,10 +129,3 @@ if not DEBUG:
 # Crispy Forms Setup
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
-
-# Security & Session Configuration
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'dashboard'
-LOGOUT_REDIRECT_URL = 'login'
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
