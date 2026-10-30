@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(
     DEBUG=(bool, True),
     SECRET_KEY=(str, 'django-insecure-its-college-erp-local-dev-key'),
-    ALLOWED_HOSTS= ['*'],
+    ALLOWED_HOSTS=(list, ['*']),
     DATABASE_URL=(str, '')
 )
 
@@ -131,4 +131,3 @@ LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-ALLOWED_HOSTS= ['*'],
