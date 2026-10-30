@@ -9,15 +9,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env(
     DEBUG=(bool, True),
     SECRET_KEY=(str, 'django-insecure-its-college-erp-local-dev-key'),
-    ALLOWED_HOSTS= ['*'],
+    ALLOWED_HOSTS=(list, ['*']),
     DATABASE_URL=(str, '')
 )
 
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = env('SECRET_KEY')
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+DEBUG = env('DEBUG')
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
+
 # Installed Applications
 INSTALLED_APPS = [
     # Built-in Django Apps
@@ -72,8 +73,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'erp_project.wsgi.application'
 
-# Database Configuration (PostgreSQL / SQLite fallback)
-if env('DATABASE_URL'):
+# Database Configuration (PostgreSQL if URL exists, else SQLite fallback)
+DATABASE_URL = env('DATABASE_URL', default='')
+if DATABASE_URL.strip():
     DATABASES = {
         'default': env.db('DATABASE_URL')
     }
@@ -129,5 +131,3 @@ LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# Force allow all hosts for Vercel (Sabse niche likhna hai)
-ALLOWED_HOSTS = ['*']
